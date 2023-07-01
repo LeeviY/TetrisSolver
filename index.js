@@ -21,11 +21,16 @@ const boardMatrix = Array(20)
     .map(() => Array(10).fill(""));
 
 document.addEventListener("DOMContentLoaded", async () => {
-    for (let i = 0; i < 10; i++) {
+    // for (let i = 0; i < 1; i++) {
+    //     const nextPiece = getNextPiece();
+    //     drawMatrix(step(nextPiece), nextPiece);
+    //     await new Promise((r) => setTimeout(r, 1000));
+    // }
+    const button = document.getElementById("drop-piece-button");
+    button.addEventListener("click", () => {
         const nextPiece = getNextPiece();
         drawMatrix(step(nextPiece), nextPiece);
-        await new Promise((r) => setTimeout(r, 1000));
-    }
+    });
 });
 
 function drawStep() {
