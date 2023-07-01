@@ -1,15 +1,20 @@
 {
-  "name": "tetris_score",
+  "name": "tetris_solver",
   "version": "1.0.0",
+  "repository": {
+    "url": "git+https://github.com/LeeviY/TetrisSolver.git"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public"
   },
-  "author": "",
+  "author": "Leevi Y",
   "license": "ISC",
   "devDependencies": {
+    "gh-pages": "^5.0.0",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
     "webpack": "^5.88.1",
