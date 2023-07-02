@@ -10,6 +10,20 @@ body {
 
 #tetris-container {
     background-color: rgb(14, 14, 14);
+    position: relative;
+}
+
+.counter-container {
+    position: absolute;
+    left: -60px;
+    top: 0;
+    padding: 10px;
+}
+
+#counter {
+    color: white;
+    font-size: 20px;
+    text-align: end;
 }
 
 .slider-container {
