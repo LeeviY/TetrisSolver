@@ -1,0 +1,78 @@
+body {
+    background-color: black;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#tetris-container {
+    background-color: rgb(14, 14, 14);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-container {
+    position: relative;
+}
+
+.counter-container {
+    position: absolute;
+    left: -60px;
+    top: 0;
+    padding: 10px;
+}
+
+#counter {
+    color: white;
+    font-size: 20px;
+    text-align: end;
+}
+
+.lookahead-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.lookahead {
+    background-color: rgb(14, 14, 14);
+    margin: 10px;
+}
+
+.slider-container {
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+#speed-slider {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.button-container button {
+    margin: 0 2px;
+    padding: 10px 20px;
+    width: 80px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #d534db;
+    color: #fff;
+    cursor: pointer;
+}

@@ -3,19 +3,33 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Tetris</title>
-        <style>
-            body {
-                background-color: black;
-            }
-            #tetris-container {
-                background-color: rgb(14, 14, 14);
-            }
-        </style>
+        <title>Tetris Solver</title>
+        <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
         <div id="tetris-container">
-            <canvas id="tetris-board" width="200" height="400"></canvas>
+            <div class="board-container">
+                <canvas id="tetris-board" width="200" height="400"></canvas>
+                <div class="counter-container">
+                    <label id="counter">0</label>
+                </div>
+            </div>
+            <div class="lookahead-container">
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+            </div>
+        </div>
+        <div class="slider-container">
+            <input type="range" min="0.001" max="1" value="0.5" step="0.001" id="speed-slider" />
+        </div>
+        <div class="button-container">
+            <button id="drop-button">Drop</button>
+            <button id="start-stop-button">Start</button>
+            <button id="reset-button">Reset</button>
+            <button id="train-button" style="display: none">Train</button>
         </div>
 
         <script src="main-bundle.js"></script>

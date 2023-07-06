@@ -1,181 +1,84 @@
-export class Board {
-    private _board: string[][] = Array(20)
-        .fill("")
-        .map(() => Array(10).fill(""));
-    public _tetriminos: Map<string, number[][][]> = new Map();
+import { Tetriminos, PieceLetters } from "./Tetriminos";
 
-    private pieceLetters: string[] = ["I", "J", "L", "O", "S", "T", "Z"];
-    private shuffledPieces: string[] = [];
-    private currentIndex: number = 0;
+export function printBoard(board: number[]): void {
+    const boardString = board
+        .map((value, index) => {
+            const row = `${index.toString().padStart(2)} |${value
+                .toString(2)
+                .padStart(10, "0")
+                .replaceAll("0", "  ")
+                .replaceAll("1", " ■")}`;
+            return row;
+        })
+        .join("\n");
+    console.log(boardString);
+    console.log("------------------------");
+    console.log("   | 0 1 2 3 4 5 6 7 8 9");
+}
 
-    constructor() {
-        this._tetriminos.set("J", [
-            [
-                [0, 1],
-                [0, 1],
-                [1, 1],
-            ],
-            [
-                [1, 1, 1],
-                [0, 0, 1],
-            ],
-            [
-                [1, 1],
-                [1, 0],
-                [1, 0],
-            ],
-            [
-                [1, 0, 0],
-                [1, 1, 1],
-            ],
-        ]);
-        this._tetriminos.set("L", [
-            [
-                [1, 0],
-                [1, 0],
-                [1, 1],
-            ],
-            [
-                [1, 1, 1],
-                [1, 0, 0],
-            ],
-            [
-                [1, 1],
-                [0, 1],
-                [0, 1],
-            ],
-            [
-                [0, 0, 1],
-                [1, 1, 1],
-            ],
-        ]);
-        this._tetriminos.set("I", [[[1], [1], [1], [1]], [[1, 1, 1, 1]]]);
-        this._tetriminos.set("O", [
-            [
-                [1, 1],
-                [1, 1],
-            ],
-        ]);
-        this._tetriminos.set("T", [
-            [
-                [0, 1, 0],
-                [1, 1, 1],
-            ],
-            [
-                [1, 0],
-                [1, 1],
-                [1, 0],
-            ],
-            [
-                [1, 1, 1],
-                [0, 1, 0],
-            ],
-            [
-                [0, 1],
-                [1, 1],
-                [0, 1],
-            ],
-        ]);
-        this._tetriminos.set("S", [
-            [
-                [0, 1, 1],
-                [1, 1, 0],
-            ],
-            [
-                [1, 0],
-                [1, 1],
-                [0, 1],
-            ],
-        ]);
-        this._tetriminos.set("Z", [
-            [
-                [1, 1, 0],
-                [0, 1, 1],
-            ],
-            [
-                [0, 1],
-                [1, 1],
-                [1, 0],
-            ],
-        ]);
+export function dropPiece(
+    board: number[],
+    piece: string,
+    rotation: number,
+    column: number
+): [number[], boolean] {
+    const pieceShapes = Tetriminos.get(piece)!;
+    const pieceShape = pieceShapes[rotation];
 
-        this.printBoard();
+    // console.log(pieceShape);
+    // Shift piece to correct column.
+    const pieceWidth = Math.floor(Math.log2(pieceShape.reduce((or, x) => or | x, 0))) + 1;
+
+    let shiftedPiece = [...pieceShape];
+    for (let i = 0; i < pieceShape.length; i++) {
+        // shiftedPiece[i] = (pieceShape[i] << 10) >> Math.min(pieceWidth + column, 10);
+        shiftedPiece[i] = pieceShape[i] << Math.max(10 - (pieceWidth + column), 0);
     }
 
-    public printBoard(): void {
-        for (let i = 0; i < 20; i++) {
-            let s = i.toString().padStart(2) + " |";
-            for (let j = 0; j < 10; j++) {
-                const value = this._board[i][j];
-                s += ` ${value ? value : " "}`;
+    // console.log(`piece: ${piece} column: ${column} width: ${pieceWidth}`);
+    // shiftedPiece.forEach((x) => {
+    //     console.log(x.toString(2).padStart(10, "0").replace(/0/g, ".").replace(/1/g, "■"));
+    // });
+
+    // console.log("go to: ", board.length - pieceShape.length);
+    // Find row before where piece overlaps with existing pieces.
+    let y = 0;
+    out: for (; y < board.length - pieceShape.length + 1; y++) {
+        for (let pieceY = 0; pieceY < pieceShape.length; pieceY++) {
+            if (board[y + pieceY] & shiftedPiece[pieceY]) {
+                y--;
+                break out;
             }
-            console.log(s);
         }
-        console.log("------------------------");
-        console.log("   | 0 1 2 3 4 5 6 7 8 9");
-        //console.log(this._board);
+    }
+    y = Math.min(board.length - pieceShape.length, y);
+
+    // Add new piece to the board.
+    for (let i = 0; i < shiftedPiece.length; i++) {
+        board[y + i] |= shiftedPiece[i];
     }
 
-    public getBoard(): string[][] {
-        return this._board;
+    return [board, y - pieceShape.length < 0];
+}
+
+export function clearLines(board: number[]): number[] {
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === 0b1111111111) {
+            board[i] = 0;
+        }
     }
 
-    public dropPiece(piece: string, rotation: number, column: number): void {
-        const pieceShapes = this._tetriminos.get(piece);
-        if (!pieceShapes) {
-            console.log("Invalid piece type");
-            return;
-        }
-        const pieceShape = pieceShapes[rotation];
-        const pieceWidth = pieceShape[0].length;
-
-        column = Math.max(0, column - pieceWidth);
-
-        let row = -pieceShape.length;
-        let pieceRow = pieceShape.length - 1;
-        for (let y = 0; y < this._board.length; y++, row++) {
-            const currentRow = this._board[y];
-            if (pieceRow < 0) {
-                row--;
-                break;
-            }
-            for (let x = 0; x < pieceWidth; x++) {
-                if (pieceShape[pieceRow][x] && currentRow[x + column]) {
-                    y--;
-                    pieceRow--;
-                    row--;
+    for (let i = board.length - 1; i >= 0; i--) {
+        if (board[i] === 0) {
+            for (let j = i - 1; j >= 0; j--) {
+                if (board[j] !== 0) {
+                    board[i] = board[j];
+                    board[j] = 0;
                     break;
                 }
             }
         }
-
-        console.log(row);
-
-        for (let y = 0; y < pieceShape.length; y++) {
-            for (let x = 0; x < pieceShape[y].length; x++) {
-                if (pieceShape[y][x]) this._board[row + y][column + x] = piece;
-            }
-        }
     }
 
-    private shufflePieces(): void {
-        this.shuffledPieces = [...this.pieceLetters];
-        for (let i = this.shuffledPieces.length - 1; i > 0; i--) {
-            const randomIndex = Math.floor(Math.random() * (i + 1));
-            [this.shuffledPieces[i], this.shuffledPieces[randomIndex]] = [
-                this.shuffledPieces[randomIndex],
-                this.shuffledPieces[i],
-            ];
-        }
-        this.currentIndex = 0;
-    }
-
-    public getNextPiece(): string {
-        if (this.currentIndex >= this.shuffledPieces.length) {
-            this.shufflePieces();
-        }
-        const nextPiece = this.shuffledPieces[this.currentIndex];
-        this.currentIndex++;
-        return nextPiece;
-    }
+    return board;
 }
