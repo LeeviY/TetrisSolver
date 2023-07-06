@@ -3,14 +3,23 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Tetris</title>
+        <title>Tetris Solver</title>
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
         <div id="tetris-container">
-            <canvas id="tetris-board" width="200" height="400"></canvas>
-            <div class="counter-container">
-                <label id="counter">0</label>
+            <div class="board-container">
+                <canvas id="tetris-board" width="200" height="400"></canvas>
+                <div class="counter-container">
+                    <label id="counter">0</label>
+                </div>
+            </div>
+            <div class="lookahead-container">
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
+                <canvas class="lookahead" width="80" height="40"> </canvas>
             </div>
         </div>
         <div class="slider-container">
@@ -20,6 +29,7 @@
             <button id="drop-button">Drop</button>
             <button id="start-stop-button">Start</button>
             <button id="reset-button">Reset</button>
+            <button id="train-button" style="display: none">Train</button>
         </div>
 
         <script src="main-bundle.js"></script>

@@ -11,6 +11,13 @@ body {
 #tetris-container {
     background-color: rgb(14, 14, 14);
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-container {
+    position: relative;
 }
 
 .counter-container {
@@ -24,6 +31,18 @@ body {
     color: white;
     font-size: 20px;
     text-align: end;
+}
+
+.lookahead-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.lookahead {
+    background-color: rgb(14, 14, 14);
+    margin: 10px;
 }
 
 .slider-container {
